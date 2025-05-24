@@ -9,19 +9,27 @@ const sites = createSlice({
   reducers: {
     addWebsite: (state, action: PayloadAction<PayloadWebsite>) => {
       state.push({
+        parent: 0,
         id: state.length + 1,
         title: action.payload.title,
         url: action.payload.url,
-        type: 'website'
+        type: 'website',
+        img: '',
+        img_cached: false,
       });
     },
     updateWebsite: (state, action: PayloadAction<PayloadWebsite>) => {
       const site = state.find(entry => entry.id === action.payload.id) as NewTabWebsite;
       site.title = action.payload.title;
       site.url = action.payload.url;
+      if (action.payload.image){
+        site.img = action.payload.image;
+        site.img_cached = true;
+      }
     },
     addFolder: (state, action: PayloadAction<PayloadFolder>) => {
       state.push({
+        parent: 0,
         id: state.length + 1,
         title: action.payload.title,
         children: [],

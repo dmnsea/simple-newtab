@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const prefs = createSlice({
   name: 'prefs',
-  initialState: restorePrefs(),
+  initialState: restorePrefs() as Preferences,
   reducers: {
     switchTheme: (state: Preferences) => {
       state.darkTheme = !state.darkTheme;

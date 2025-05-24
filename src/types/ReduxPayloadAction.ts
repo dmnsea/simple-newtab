@@ -6,4 +6,5 @@ export interface PayloadFolder{
 
 export interface PayloadWebsite extends PayloadFolder {
   url: string;
+  image?: string;
 }

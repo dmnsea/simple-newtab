@@ -1,31 +1,51 @@
-import { NewTabWebsite } from "@/types/NewTabEntries";
+import axios from 'axios';
+import {NewTabWebsite, WebsiteImages} from "@/types/NewTabEntries";
 import {
+  Avatar,
   Card,
   CardContent,
-  CardMedia,
-  Divider,
+  CardMedia, CircularProgress,
+  Divider, Paper,
   Typography,
 } from "@mui/material";
-import { Language } from "@mui/icons-material";
-import { SyntheticEvent, useState } from "react";
+import {useEffect, useState} from "react";
+import {useDispatch} from "react-redux";
+import {updateWebsite} from "@/redux/tabSlice.ts";
 
 export default function WebsiteCard(props: NewTabWebsite) {
-  const [loaded, setLoaded] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
-  const handleLoad = (e: SyntheticEvent) => {
-    console.log(e);
-    console.log(e.target);
-    console.log(e.type);
-    setLoaded(e.type === "load" ? true : false);
-    setFailed(e.type === "error" ? true : false);
-  };
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(!props.img_cached){
+      const url = new URL(location.origin+'/api/check');
+      url.searchParams.set('url', props.url);
+      axios.get(url.toString()).then(res => {
+        const images = res.data as WebsiteImages;
+        dispatch(
+          updateWebsite({
+            id: props.id,
+            title: props.title,
+            url: props.url,
+            parent: props.parent,
+            image: images.og_img ?? images.tw_img ?? images.rel_icon ?? images.fav_icon,
+          })
+        )
+      });
+      setLoaded(true);
+      setFailed(false);
+    }else{
+      setLoaded(true);
+    }
+  });
 
   return (
     <a href={props.url} target={'_blank'} style={{textDecoration: 'none'}}>
       <Card
         sx={{
           width: "100%",
-          height: "140px",
+          height: "200px",
           textAlign: "center",
           backgroundColor: "action.selectedHover",
           "&:hover": {
@@ -40,25 +60,27 @@ export default function WebsiteCard(props: NewTabWebsite) {
       >
         <CardMedia
           sx={{
+            height: "96px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             padding: 1,
+            flexGrow: 1
           }}
         >
-          {(!loaded || failed) && <Language sx={{width: 32, height: 32}}/>}
-          {!failed && (
-            <img
-              src={new URL(props.url).origin + "/favicon.ico"}
-              alt={props.title + " favicon"}
-              onLoad={handleLoad}
-              onError={handleLoad}
-              width={32}
-              height={32}
-            />
-          )}
+          {!loaded && <CircularProgress size={64} color={'primary'}/>}
+          {loaded && !failed && props.img != '' && <img src={props.img} alt={props.title} style={{height: '100%'}}/>}
+          {loaded && (failed || props.img == '') && <Avatar sx={{height: '100%'}}>{props.title.charAt(0)}</Avatar>}
         </CardMedia>
-        <CardContent>
+        <CardContent sx={{
+          height: 96,
+          boxSizing: 'border-box',
+          display: "flex",
+          flexDirection: 'column',
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 1,
+        }}>
           <Typography>{props.title}</Typography>
           <Divider />
           <Typography variant={'subtitle2'} sx={{width: '100%', height: '1.5em', overflow: 'hidden', textOverflow: 'ellipsis'}}>{props.url}</Typography>

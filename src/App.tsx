@@ -7,7 +7,7 @@ import FolderCard from "./components/FolderCard";
 
 function App() {
   const entries = useSelector((state: RootState) => state.tabEntries);
-  const sizes = { xs: 6, sm: 4, md: 3, lg: 2, xl: 1 };
+  const sizes = { xs: 6, sm: 4, md: 3, lg: 2, xl: 2 };
 
   return (
     <Stack padding={2} direction={'column'}>
@@ -18,13 +18,17 @@ function App() {
               {entry.type === "website" ? (
                 <WebsiteCard
                   id={entry.id}
+                  parent={entry.parent}
                   title={entry.title}
                   url={entry.url}
                   type={entry.type}
+                  img={entry.img}
+                  img_cached={entry.img_cached}
                 />
               ) : (
                 <FolderCard
                   id={entry.id}
+                  parent={entry.parent}
                   title={entry.title}
                   children={entry.children}
                   type={entry.type}

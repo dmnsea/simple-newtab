@@ -1,11 +1,10 @@
-import { Preferences } from "@/types/Preferences";
-import { Action } from "redux";
+import {Preferences } from "@/types/Preferences";
+import {Action} from "redux";
 
 export function restorePrefs(): Preferences {
   const prefsStr = localStorage.getItem("snt-prefs");
   if (prefsStr) {
-    const prefs = JSON.parse(prefsStr);
-    return prefs;
+    return JSON.parse(prefsStr);
   }
   return {darkTheme: false};
 }
