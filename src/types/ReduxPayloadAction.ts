@@ -4,7 +4,10 @@ export interface PayloadFolder{
   parent: number;
 }
 
-export interface PayloadWebsite extends PayloadFolder {
-  url: string;
+export interface PayloadWebsite {
+  id: number;
+  title?: string;
+  parent: number;
+  url?: string;
   image?: string;
 }

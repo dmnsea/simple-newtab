@@ -12,15 +12,28 @@ import {
   Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { addFolder, addWebsite } from "@/redux/tabSlice";
+import { RootState } from "@/redux/store";
 
 export default function AddEntryCard() {
+  const currentFolder = useSelector((state: RootState) => state.currentFolder).slice(-1)[0];
+
   const [shown, setShown] = useState(false);
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [entryName, setEntryName] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
+  const [creationDisabled, setCreationDisabled] = useState(true);
+
+  useEffect(() => {
+    setCreationDisabled(
+      creatingFolder
+        ? entryName.trim().length == 0
+        : websiteUrl.trim().length == 0
+    );
+  }, [creatingFolder, entryName, websiteUrl]);
+
   const closeDialog = () => {
     setShown(false);
     setEntryName("");
@@ -34,7 +47,7 @@ export default function AddEntryCard() {
         variant={"outlined"}
         sx={{
           width: "100%",
-          height: "140px",
+          height: 128,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -62,6 +75,7 @@ export default function AddEntryCard() {
                 color={"primary"}
                 value={creatingFolder}
                 onChange={(e, v) => {
+                  e.stopPropagation();
                   setCreatingFolder(v);
                 }}
               >
@@ -101,23 +115,24 @@ export default function AddEntryCard() {
                   dispatch(
                     addWebsite({
                       id: 0,
-                      parent: 0,
+                      parent: currentFolder.id,
                       title: entryName,
                       url: websiteUrl,
                     })
                   );
                   closeDialog();
-                }else{
+                } else {
                   dispatch(
                     addFolder({
                       id: 0,
-                      parent: 0,
-                      title: entryName
+                      parent: currentFolder.id,
+                      title: entryName,
                     })
                   );
                   closeDialog();
                 }
               }}
+              disabled={creationDisabled}
               color={"success"}
               variant={"contained"}
             >

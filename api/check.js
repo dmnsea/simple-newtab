@@ -1,27 +1,6 @@
 'use server';
 import { Buffer } from 'node:buffer';
 
-// image fetcher
-async function fetchImageAsBase64(url){
-  const res = await fetch(url, {
-    redirect: "follow",
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0'
-    }
-  });
-  // console.log(`status (${url}): ` + res.status);
-  if(res.status < 400){
-    const blob = await res.blob();
-    // console.log(`blob type (${url}): ` + blob.type);
-    if(blob.type.startsWith('image/')) {
-      return `data:${blob.type};base64,` + new Buffer(await blob.arrayBuffer(), 'base64').toString('base64');
-    }else{
-      return null;
-    }
-  }
-  return null;
-}
-
 export async function GET(request) {
   try{
     // console.log("\n\n\nVERCEL SERVERLESS FUNCTION TEST");
@@ -30,6 +9,7 @@ export async function GET(request) {
     // console.log('URL TO CHECK: ' + url.searchParams.get('url'));
 
     if(target){
+
       // Place to save results
       const info = {
         title: null,
@@ -57,7 +37,7 @@ export async function GET(request) {
       const body = await res.text();
 
       const titleMatch = body.match(/<title>(?<title>.*?)<\/title>/);
-      info.title = titleMatch?.groups.title;
+      info.title = titleMatch?.groups.title ?? turl.hostname;
 
       const ogimgMatch = body.match(/<meta property="og:image" content="(?<ogimg>.*?)".*?>/);
       info.og = ogimgMatch?.groups.ogimg ?? null;
@@ -77,12 +57,13 @@ export async function GET(request) {
           info.tw = turl.origin + info.tw;
         }
         // console.log('fetching twitter:image');
-        info.twimg = await fetchImageAsBase64(info.tw);
+        info.tw_img = await fetchImageAsBase64(info.tw);
         // console.log('fetched twitter:image');
       }
 
-      const relIconMatch = body.match(/<link.*?rel=".*?icon".*?href="(?<relicon>.*?)".*?>/);
-      info.rel = relIconMatch?.groups.relicon ?? null;
+      // sometimes more than 1, 
+      const allRel = Array.from(body.matchAll(/<link.*?rel=".*?icon".*?href="(?<relicon>.*?)".*?>/g));
+      info.rel = allRel.length > 0 ? allRel.pop().groups.relicon : null;
       if(info.rel){
         if(info.rel.startsWith('/')){
           info.rel = turl.origin + info.rel;
@@ -105,4 +86,25 @@ export async function GET(request) {
     return Response.json({error: 'something went wrong:\n'+err})
   }
   return Response.json({error: 'provide url to check for title and favicon/rel icon/ogp image/twitter image'});
+}
+
+// image fetcher
+async function fetchImageAsBase64(url){
+  const res = await fetch(url, {
+    redirect: "follow",
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0'
+    }
+  });
+  // console.log(`status (${url}): ` + res.status);
+  if(res.status < 400){
+    const blob = await res.blob();
+    // console.log(`blob type (${url}): ` + blob.type);
+    if(blob.type.startsWith('image/')) {
+      return `data:${blob.type};base64,` + new Buffer(await blob.arrayBuffer(), 'base64').toString('base64');
+    }else{
+      return null;
+    }
+  }
+  return null;
 }

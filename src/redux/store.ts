@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import sitesReducer from './tabSlice';
+import currentFolderReducer from './currentFolderSlice';
 import prefsReducer from './preferenceSlice';
 import { SavePrefsMiddleware } from '@/utils/prefs';
 import { SaveTabEntriesMiddleware } from "@/utils/tabEntries";
@@ -7,7 +8,8 @@ import { SaveTabEntriesMiddleware } from "@/utils/tabEntries";
 const store = configureStore({
   reducer: {
     tabEntries: sitesReducer,
-    prefs: prefsReducer
+    currentFolder: currentFolderReducer,
+    prefs: prefsReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(SavePrefsMiddleware, SaveTabEntriesMiddleware)
 });
