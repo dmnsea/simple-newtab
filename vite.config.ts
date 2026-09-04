@@ -1,13 +1,28 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { crx } from '@crxjs/vite-plugin'
+import manifest from './manifest.config.ts'
+import zip from 'vite-plugin-zip-pack'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    crx({ manifest }),
+    zip({
+      outDir: 'release',
+      outFileName: 'release.zip'
+    })
+  ],
   server: {
     host: false,
     port: 3000,
     open: false,
+    cors: {
+      origin: [
+        /chrome-extension:\/\//,
+      ]
+    }
   },
   build: {
     outDir: './dist',
