@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { crx } from '@crxjs/vite-plugin'
-import manifest from './manifest.config.ts'
+import manifest from './mainfest.config.js'
 import zip from 'vite-plugin-zip-pack'
 
 // https://vite.dev/config/
