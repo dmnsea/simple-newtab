@@ -77,22 +77,20 @@ export default function FolderCard(props: NewTabFolder) {
       >
         <Stack
           direction="row"
-          justifyContent='center'
-          alignItems="center"
-          gap={2}
-          sx={{ height: 72, padding: 2, flexGrow: 1 }}
+          spacing={2}
+          sx={{ height: 72, padding: 2, flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
         >
           <Folder fontSize="medium" />{" "}
-          <Typography fontSize="1rem">
+          <Typography sx={{fontSize: '1rem'}}>
             {childrenCount.filter((c) => c.type == "folder").length}
           </Typography>
           <Language fontSize="medium" />{" "}
-          <Typography fontSize="1rem">
+          <Typography sx={{fontSize: '1rem'}}>
             {childrenCount.filter((c) => c.type == "website").length}
           </Typography>
         </Stack>
 
-        <Stack direction={"row"} justifyContent={"space-between"} gap={2}>
+        <Stack direction={"row"} sx={{justifyContent: 'space-between'}} spacing={2}>
           <Typography
             noWrap
             variant={"h6"}

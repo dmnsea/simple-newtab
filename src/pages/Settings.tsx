@@ -65,12 +65,12 @@ export default function SettingsPage() {
     >
       <Stack
         direction={"column"}
-        gap={2}
+        spacing={2}
         sx={{ width: "90%", maxWidth: 400, overflowY: "auto" }}
       >
         <Card id="settings-card">
           <CardContent>
-            <Stack gap={2}>
+            <Stack spacing={2}>
               <Typography variant="h5">Settings</Typography>
               <Divider />
               <Typography variant="h6">Theme</Typography>
@@ -88,8 +88,7 @@ export default function SettingsPage() {
               </Typography>
               <Stack
                 direction={"row"}
-                justifyContent={"space-between"}
-                alignItems={"center"}
+                sx={{justifyContent: 'space-between', alignItems: 'center'}}
               >
                 Status
                 <Switch

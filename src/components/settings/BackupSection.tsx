@@ -17,7 +17,7 @@ export default function BackupSection() {
   return (
     <>
       <Typography variant="h6">Backup</Typography>
-      <Stack direction="row" gap={1}>
+      <Stack direction="row" spacing={1}>
         <Button
           startIcon={<CloudUpload />}
           fullWidth
@@ -89,7 +89,7 @@ export default function BackupSection() {
               }}
               onClick={async () => {
                 setLoading(true);
-                
+
                 const data = await restoreBackup();
                 dispatch(entriesFromFile(data.entries));
                 dispatch(prefsFromFile(data.prefs));

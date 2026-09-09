@@ -32,7 +32,7 @@ export default function DataDeletionAccordion() {
         <Typography variant="h5">Danger zone</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Stack direction={"column"} gap={2}>
+        <Stack direction={"column"} spacing={2}>
           <Typography variant="h6">Folder deletion behaviour</Typography>
 
           <Divider />

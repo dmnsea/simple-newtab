@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import { RootState } from "@/redux/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { updateFolder, updateWebsite } from "@/redux/tabSlice";
@@ -42,11 +42,6 @@ export default function EditEntryDialog(
     props.type == "website" ? props.img : null
   );
   const [loading, setLoading] = useState(false);
-  const [disabled, setDisabled] = useState(isDisabled(props.type, title, url));
-
-  useEffect(() => {
-    setDisabled(isDisabled(props.type, title, url));
-  }, [props.type, title, url]);
 
   const foldersList = useSelector((state: RootState) => state.tabEntries)
     .filter((e) => e.type == "folder").filter(e => e.id != props.id)
@@ -64,11 +59,10 @@ export default function EditEntryDialog(
         <CardContent>
           <Stack
             direction={"column"}
-            justifyContent={"center"}
-            alignItems={"stretch"}
-            gap={2}
+            spacing={2}
+            sx={{justifyContent: 'center', alignItems: 'stretch'}}
           >
-            <Typography variant="h5" textAlign={"center"}>
+            <Typography variant="h5" sx={{textAlign: 'center'}}>
               Editing {props.type == "website" ? "website" : "folder"}
             </Typography>
             {props.type == "website" && (
@@ -88,7 +82,7 @@ export default function EditEntryDialog(
                 )}
               </>
             )}
-            <Stack direction={"row"} alignItems={"center"} gap={1}>
+            <Stack direction={"row"} spacing={1} sx={{alignItems: 'center'}}>
               <TextField
                 variant="outlined"
                 label="Name"
@@ -102,7 +96,7 @@ export default function EditEntryDialog(
               </Tooltip>
             </Stack>
             <InputLabel id="folder-picker">Parent folder</InputLabel>
-            <Stack direction={"row"} alignItems={"center"} gap={1}>
+            <Stack direction={"row"} spacing={1} sx={{alignItems: 'center'}}>
               <Select
                 fullWidth
                 labelId="folder-picker"
@@ -126,7 +120,7 @@ export default function EditEntryDialog(
             </Stack>
             {props.type == "website" && (
               <>
-                <Stack direction={"row"} alignItems={"center"} gap={1}>
+                <Stack direction={"row"} spacing={1} sx={{alignItems: 'center'}}>
                   <TextField
                     variant="outlined"
                     label="URL"
@@ -191,7 +185,7 @@ export default function EditEntryDialog(
                 props.close();
               }
             }}
-            disabled={disabled}
+            disabled={isDisabled(props.type, title, url)}
             color={"success"}
             variant={"contained"}
           >

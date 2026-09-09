@@ -12,9 +12,9 @@ function App() {
   const sizes = { xs: 6, sm: 4, md: 3, lg: 2, xl: 2 };
 
   return (
-    <Stack padding={2} gap={2} direction={'column'}>
+    <Stack sx={{padding: 2}} spacing={2} direction={'column'}>
       <SearchBar/>
-      <Grid container spacing={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
+      <Grid container sx={{justifyContent: 'center', alignItems: 'center'}} spacing={2}>
         {entries.length > 0 &&
           entries.map((entry) => (
             <Grid size={sizes} key={`entry_${entry.id}`}>

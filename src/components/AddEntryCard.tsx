@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addFolder, addWebsite } from "@/redux/tabSlice";
 import { RootState } from "@/redux/store";
@@ -24,15 +24,6 @@ export default function AddEntryCard() {
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [entryName, setEntryName] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
-  const [creationDisabled, setCreationDisabled] = useState(true);
-
-  useEffect(() => {
-    setCreationDisabled(
-      creatingFolder
-        ? entryName.trim().length == 0
-        : websiteUrl.trim().length == 0
-    );
-  }, [creatingFolder, entryName, websiteUrl]);
 
   const closeDialog = () => {
     setShown(false);
@@ -66,9 +57,11 @@ export default function AddEntryCard() {
           <CardContent>
             <Stack
               direction={"column"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              gap={1}
+              spacing={1}
+              sx={{
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
             >
               <ToggleButtonGroup
                 exclusive
@@ -132,7 +125,9 @@ export default function AddEntryCard() {
                   closeDialog();
                 }
               }}
-              disabled={creationDisabled}
+              disabled={creatingFolder
+                ? entryName.trim().length == 0
+                : websiteUrl.trim().length == 0}
               color={"success"}
               variant={"contained"}
             >
